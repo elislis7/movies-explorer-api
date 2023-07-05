@@ -2,11 +2,11 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-const { JWT_SECRET, NODE_ENV } = process.env;
-
 const BadRequestError = require('../utils/errors/BadRequestError-400');
 const NotFoundError = require('../utils/errors/NotFoundError-404');
 const ConflictError = require('../utils/errors/ConflictError-409');
+
+const { JWT_SECRET, NODE_ENV } = process.env;
 
 const findUser = (id, res, next) => {
   User.findById(id)

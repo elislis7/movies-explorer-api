@@ -2,6 +2,13 @@ const { celebrate, Joi } = require('celebrate');
 
 const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 
+/* const userValidate = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    email: Joi.string().required().email(),
+  }),
+}); */
+
 const updateUserValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
@@ -26,7 +33,7 @@ const loginValidation = celebrate({
 
 const createMovieValidation = celebrate({
   body: Joi.object().keys({
-    nameRU: Joi.string().required().hex().length(24),
+    nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
     description: Joi.string().required(),
     year: Joi.string().required(),
@@ -35,9 +42,8 @@ const createMovieValidation = celebrate({
     country: Joi.string().required(),
     image: Joi.string().required().regex(urlRegex),
     thumbnail: Joi.string().required().regex(urlRegex),
-    trailerLink: Joi.string().required().regex(urlRegex),
+    trailer: Joi.string().required().regex(urlRegex),
     movieId: Joi.number().required(),
-    owner: Joi.string().required(),
   }),
 });
 
@@ -48,6 +54,7 @@ const deleteMovieValidation = celebrate({
 });
 
 module.exports = {
+  // userValidate,
   updateUserValidation,
   createUserValidation,
   loginValidation,

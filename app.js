@@ -1,15 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const cors = require('cors');
 
-const router = require('./routes/router');
-const auth = require('./middlewares/auth');
+const router = require('./routes/index');
 const handelError = require('./middlewares/handelError');
 
-const { createUserValidation, loginValidation } = require('./middlewares/validations');
-const { createUser, login } = require('./controllers/users');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const {
@@ -25,10 +23,6 @@ app.use(express.json());
 
 app.use(requestLogger);
 
-app.post('/signup', createUserValidation, createUser);
-app.post('/signin', loginValidation, login);
-
-app.use(auth);
 app.use(router);
 
 app.use(errorLogger);
