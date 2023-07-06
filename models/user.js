@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 
 const NotAuthError = require('../utils/errors/NotAuthError-401');
 
+const { WRONG_EMAIL, WRONG_EMAIL_OR_PASSWORD } = require('../utils/constants');
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -19,7 +21,7 @@ const userSchema = new mongoose.Schema(
       unique: true,
       validate: {
         validator: (email) => validator.isEmail(email),
-        message: 'Некорректный Email',
+        message: WRONG_EMAIL,
       },
     },
 
@@ -40,14 +42,14 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     .select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new NotAuthError('Неправильные почта или пароль'));
+        return Promise.reject(new NotAuthError(WRONG_EMAIL_OR_PASSWORD));
       }
 
       return bcrypt
         .compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new NotAuthError('Неправильные почта или пароль'));
+            return Promise.reject(new NotAuthError(WRONG_EMAIL_OR_PASSWORD));
           }
           return user;
         });
