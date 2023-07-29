@@ -12,12 +12,27 @@ const handelError = require('./middlewares/handelError');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
+const corsSettings = {
+  origin: [
+    'https://lis.movies-explorer.nomoreparties.sbs',
+    'http://localhost:3000',
+    'http://lis.movies-explorer.nomoreparties.sbs',
+    'http://api.lis.movies-explorer.nomoreparties.sbs',
+    'https://api.lis.movies-explorer.nomoreparties.sbs',
+  ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin'],
+  credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+};
+
 const { PORT = 3001 } = process.env;
 const { DB_CONNECT = 'mongodb://127.0.0.1:27017/bitfilmsdb' } = process.env;
 
 const app = express();
 
-app.use(cors());
+app.use(cors(corsSettings));
 app.use(helmet());
 app.use(express.json());
 
