@@ -16,8 +16,8 @@ const {
 
 const { JWT_SECRET, NODE_ENV } = process.env;
 
-const findUser = (id, res, next) => {
-  User.findById(id)
+const getUser = (req, res, next) => {
+  User.findById(req.user._id)
     .orFail()
     .then((user) => res.status(200).send(user))
     .catch((err) => {
@@ -28,19 +28,13 @@ const findUser = (id, res, next) => {
     });
 };
 
-const getUser = (req, res, next) => findUser(req.params._id, res, next);
-
 const createUser = (req, res, next) => {
-  const {
-    name, email, password,
-  } = req.body;
+  const { name, email, password } = req.body;
 
   bcrypt.hash(password, 10)
-    .then((hash) => {
-      User.create({ name, email, password: hash });
-    })
+    .then((hash) => User.create({ name, email, password: hash }))
     .then((user) => {
-      res.status(201).send({
+      res.status(201).json({
         name: user.name,
         email: user.email,
         _id: user._id,
