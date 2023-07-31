@@ -37,27 +37,24 @@ const createUser = (req, res, next) => {
 
   bcrypt.hash(password, 10)
     .then((hash) => {
-      User.create({
-        name, email, password: hash,
-      })
-        .then(() => {
-          res.status(201).send({
-            data: {
-              name, email,
-            },
-          });
-        })
-        .catch((err) => {
-          if (err.code === 11000) {
-            return next(new ConflictError(EMAIL_ALREADY_EXISTS));
-          }
-          if (err.name === 'ValidationError') {
-            return next(new BadRequestError(WRONG_CREATE_USER));
-          }
-          return next(err);
-        });
+      User.create({ name, email, password: hash });
     })
-    .catch(next);
+    .then((user) => {
+      res.status(201).send({
+        name: user.name,
+        email: user.email,
+        _id: user._id,
+      });
+    })
+    .catch((err) => {
+      if (err.code === 11000) {
+        return next(new ConflictError(EMAIL_ALREADY_EXISTS));
+      }
+      if (err.name === 'ValidationError') {
+        return next(new BadRequestError(WRONG_CREATE_USER));
+      }
+      return next(err);
+    });
 };
 
 const updateUser = (req, res, next, updateData) => {
