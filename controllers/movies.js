@@ -29,7 +29,7 @@ const createdMovies = (req, res, next) => {
     country,
     image,
     thumbnail,
-    trailer,
+    trailerLink,
     movieId,
   } = req.body;
   const owner = req.user._id;
@@ -44,7 +44,7 @@ const createdMovies = (req, res, next) => {
     country,
     image,
     thumbnail,
-    trailer,
+    trailerLink,
     movieId,
     owner,
   })
