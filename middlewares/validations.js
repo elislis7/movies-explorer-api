@@ -1,6 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
-
-const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
+const validator = require('validator');
+const { ObjectId } = require('mongoose').Types;
 
 const updateUserValidation = celebrate({
   body: Joi.object().keys({
@@ -24,25 +24,35 @@ const loginValidation = celebrate({
   }),
 });
 
+const validationUrl = (url) => {
+  const isValid = validator.isURL(url);
+  if (isValid) {
+    return url;
+  }
+};
+
 const createMovieValidation = celebrate({
   body: Joi.object().keys({
+    country: Joi.string().required(),
+    director: Joi.string().required(),
+    duration: Joi.number().required(),
+    year: Joi.string().required(),
+    description: Joi.string().required(),
+    image: validationUrl,
+    trailerLink: validationUrl,
+    thumbnail: validationUrl,
+    movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
-    description: Joi.string().required(),
-    year: Joi.string().required(),
-    duration: Joi.number().required(),
-    director: Joi.string().required(),
-    country: Joi.string().required(),
-    image: Joi.string().required().regex(urlRegex),
-    thumbnail: Joi.string().required().regex(urlRegex),
-    trailerLink: Joi.string().required().regex(urlRegex),
-    movieId: Joi.number().required(),
   }),
 });
 
 const deleteMovieValidation = celebrate({
   params: Joi.object().keys({
-    movieId: Joi.string().hex().length(24),
+    movieId: Joi.string().required().custom((value, helpers) => {
+      if (ObjectId.isValid(value)) return value;
+      return helpers.message('Невалидный id');
+    }),
   }),
 });
 
