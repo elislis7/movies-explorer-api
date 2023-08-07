@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const jwtKey = require('../utils/config');
+/* const jwtKey = require('../utils/config'); */
 
 const NotAuthError = require('../utils/errors/NotAuthError-401');
 
@@ -18,7 +18,7 @@ const auth = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : jwtKey);
+    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key');
   } catch (err) {
     return next(new NotAuthError(AUTH_REQUIRED));
   }
