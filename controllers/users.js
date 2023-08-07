@@ -89,7 +89,10 @@ const login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : jwtKey, { expiresIn: '7d' });
       res.send({ token });
     })
-    .catch(next);
+    .catch((err) => {
+      res.status(500).send({ message: 'На сервере произошла ошибка', err: err.message });
+      next();
+    });
 };
 
 module.exports = {
