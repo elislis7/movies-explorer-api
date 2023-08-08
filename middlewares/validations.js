@@ -1,6 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
-const { ObjectId } = require('mongoose').Types;
 
 const updateUserValidation = celebrate({
   body: Joi.object().keys({
@@ -49,10 +48,7 @@ const createMovieValidation = celebrate({
 
 const deleteMovieValidation = celebrate({
   params: Joi.object().keys({
-    movieId: Joi.string().required().custom((value, helpers) => {
-      if (ObjectId.isValid(value)) return value;
-      return helpers.message('Невалидный id');
-    }),
+    movieId: Joi.string().hex().length(24),
   }),
 });
 
